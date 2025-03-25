@@ -18,18 +18,18 @@
         <input type="text" id="search-input" placeholder="Nome ou ID do Pokémon">
 <br><br>
         
-       
-        
         
         <div class="buttons">
-            <button id="prev-btn" class="arrow-buttons" onclick="navegarPokemon('prev')" disabled>&lt; Anterior</button>
+            <button id="prev-btn" class="arrow-buttons" onclick="voltarPokemon()">&lt; Anterior</button>
             <button onclick="buscarPokemon()">Buscar</button>
 
-            <button id="next-btn" class="arrow-buttons" onclick="navegarPokemon('next')" disabled>Próximo &gt;</button>
+            <button id="next-btn" class="arrow-buttons" onclick="avancarPokemon()">Próximo &gt;</button>
         </div>
     </div>
 <!--CRIAR AS FUNÇÕES DE RETORNO E MANIPULAÇÃO DOS DADOS ABAIXO-->
     <script>
+        let idPokemon = 1;
+
      const buscarPokemonPorNome = async (nome) => {
     try {
       const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${nome}`);
@@ -51,15 +51,44 @@
       }
       const pokemon = await response.json();
 
+      idPokemon = pokemon.id;
       document.getElementById("nome").textContent= pokemon.name;
       document.getElementById("peso").innerHTML = pokemon.weight;
-      var img = document.getElementById("image")
-      img.src = pokemon.sprites.front_default;
+      document.getElementById("image").src = pokemon.sprites.front_default;
+ 
 
      } catch (error) {
       console.error('Erro ao buscar Pokémon por ID:', error.message);
     }
   };
+
+  function buscarPokemon(){
+    let busca = document.getElementById("search-input").value;
+
+    buscarPokemonPorId(busca);
+
+  }
+
+  function avancarPokemon(){
+    if(idPokemon === 1025){
+    buscarPokemonPorId(1)
+    }
+    else{
+        buscarPokemonPorId(idPokemon+1)
+    }
+  }
+
+  function voltarPokemon(){
+    if(idPokemon === 1){
+        buscarPokemonPorId(1025)
+    }else{
+    buscarPokemonPorId(idPokemon-1)
+}
+  }
+
+  window.onload = function() {
+        buscarPokemonPorId('1'); // Usando o número 1 como padrão
+        };
     </script>
 
 </body>
